@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+
+
+{% block client_scriptjs %}
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+{% endblock %}
+
+
+{% block content %}
+    {% if period %}
+        <div class="col-6 offset-md-3">
+                <h1 align="center"></h1>
+                <p>Date: {{ period }}.</p>
+                <p>Action: {{ action }}.</p>
+                <a class="btn btn-primary my-2 my-sm-0" href="{% url 'intro' %}">Edit</a>
+
+             <form class="form-group col-6 offset-md-3" id="time_check_form" method="post" action="{% url 'intro' %}">
+                {% csrf_token %}
+              <div class="form-group">
+                <label for="exampleFormControlInput1">Check Date</label>
+                <input class="form-control" name="date_check" id="date_check">
+                  <input class="form-control" name="datetimes" value="{{ datetimes }}" hidden>
+                  <input class="form-control" name="controlselect" value="{{ action }}" hidden>
+              </div>
+              <button type="submit" class="btn btn-primary my-2 my-sm-0">Check</button>
+            </form>
+
+            {% if date_check %}
+                <p>RESULT: {{ date_check }}.</p>
+                <p>Action: {{ action_check }}</p>
+             {% endif %}
+        </div>
+    {% else %}
+
+    <h1 align="center">Select date and date!</h1>
+
+    <form class="form-group col-6 offset-md-3" id="time_form" method="post" action="{% url 'intro' %}">
+        {% csrf_token %}
+      <div class="form-group">
+        <label for="exampleFormControlInput1">Date</label>
+        <input class="form-control" name="datetimes" id="datetimes" value="4">
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlSelect1">Example select</label>
+        <select class="form-control" id="controlselect" name="controlselect">
+          <option>Working day</option>
+          <option>Working night</option>
+          <option>Free day</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary my-2 my-sm-0">Apply</button>
+    </form>
+   {% endif %}
+
+<script>
+$(function() {
+  $('input[name="datetimes"]').daterangepicker({
+      singleDatePicker: true,
+    showDropdowns: true,
+    timePicker: true,
+    startDate: moment().startOf('hour'),
+    endDate: moment().startOf('hour').add(32, 'hour'),
+    locale: {
+      format: 'DD-MM-YYYY'
+    }
+  });
+});
+</script>
+
+<script>
+$(function() {
+  $('input[name="date_check"]').daterangepicker({
+      singleDatePicker: true,
+    showDropdowns: true,
+    timePicker: true,
+    startDate: moment().startOf('hour'),
+    endDate: moment().startOf('hour').add(32, 'hour'),
+    locale: {
+      format: 'DD-MM-YYYY'
+    }
+  });
+});
+</script>
+
+{% endblock %}
